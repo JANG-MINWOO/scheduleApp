@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스케줄 관리</title>
+    <link href="https://fonts.googleapis.com/css2?family=San Francisco:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: 'San Francisco', sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+        }
+        .box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+        .btn-ghost {
+            background-color: transparent;
+            border: 2px solid black;
+            color: black;
+            border-radius: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .btn-ghost:hover {
+            background-color: black;
+            color: white;
+        }
+        .schedule-item {
+            border-bottom: 1px solid #eaeaea;
+            padding: 10px 0;
+        }
+        .schedule-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="box">
+        <h2>스케줄 등록</h2>
+        <button class="btn btn-ghost mb-3" id="toggleFormBtn">새로 등록</button>
+        <div id="scheduleForm" style="display:none;">
+            <form action="/api/schedules" method="post">
+                <div class="mb-3">
+                    <label for="author" class="form-label">작성자:</label>
+                    <input type="text" id="author" name="author" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">비밀번호:</label>
+                    <input type="password" id="password" name="password" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="task" class="form-label">내용(할일):</label>
+                    <textarea id="task" name="task" class="form-control" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-ghost">등록</button>
+                <a href="/schedules" class="btn btn-ghost">목록으로</a>
+            </form>
+        </div>
+    </div>
+
+    <div class="box">
+        <h4>저장된 스케줄</h4>
+        <div id="scheduleList">
+            <div th:each="schedule : ${schedules}">
+                <div class="schedule-item">
+                    <div>
+                        <strong th:text="${schedule.task}"></strong> (작성자: <span th:text="${schedule.author}"></span>)
+                    </div>
+                    <div>
+                        <small>작성일: <span th:text="${schedule.createdDate}"></span> | 수정일: <span th:text="${schedule.updateDate}"></span></small>
+                    </div>
+                    <button class="btn btn-ghost btn-sm" th:onclick="'location.href=\'/schedules/edit/' + ${schedule.id} + '\''">수정</button>
+                    <button class="btn btn-ghost btn-sm" th:onclick="'location.href=\'/schedules/delete/' + ${schedule.id} + '\''">삭제</button>
+                </div>
+                <hr />
+            </div>
+            <div th:if="${schedules.size() == 0}" class="text-center">
+                <p>등록된 스케줄이 없습니다.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("#toggleFormBtn").click(function() {
+            $("#scheduleForm").toggle();
+        });
+    });
+</script>
+</body>
+</html>
