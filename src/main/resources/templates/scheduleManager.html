@@ -80,7 +80,8 @@
                         <small>작성일: <span th:text="${schedule.createdDate}"></span> | 수정일: <span th:text="${schedule.updatedDate}"></span></small>
                     </div>
                     <button class="btn btn-ghost btn-sm" th:onclick="'location.href=\'/api/schedules/edit/' + ${schedule.id} + '\''">수정</button>
-                    <button class="btn btn-ghost btn-sm" th:onclick="'location.href=\'/api/schedules/delete/' + ${schedule.id} + '\''">삭제</button>
+                    <button class="btn btn-ghost btn-sm" th:onclick="'showDeleteForm(' + ${schedule.id} + ')'">삭제</button>
+
                 </div>
                 <hr />
             </div>
@@ -91,12 +92,78 @@
     </div>
 </div>
 
+<!-- 삭제 폼 -->
+<div id="deleteForm" style="display:none;" class="box">
+    <h3>삭제 확인</h3>
+    <form id="deleteScheduleForm" method="post" th:action="@{/api/schedules/{id}(id=${scheduleId})}">
+        <input type="hidden" name="_method" value="DELETE" />
+        <input type="hidden" id="scheduleId" name="id" />
+        <div class="mb-3">
+            <label for="deletePassword" class="form-label">비밀번호:</label>
+            <input type="password" id="deletePassword" name="password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-ghost">삭제</button>
+        <button type="button" class="btn btn-ghost" onclick="closeDeleteForm()">취소</button>
+    </form>
+</div>
+
 <script>
     $(document).ready(function() {
         $("#toggleFormBtn").click(function() {
             $("#scheduleForm").toggle();
         });
     });
+
+    function showDeleteForm(id) {
+        // 삭제 폼을 보여주고 선택한 일정 ID를 설정
+        $("#scheduleId").val(id);
+        $("#deleteForm").show();
+    }
+
+    function closeDeleteForm() {
+        // 삭제 폼 닫기
+        $("#deleteForm").hide();
+    }
+
+    // 삭제 폼 제출 이벤트 처리
+    $("#deleteScheduleForm").submit(function(event) {
+        event.preventDefault(); // 기본 제출 방지
+        const id = $("#scheduleId").val();
+        const password = $("#deletePassword").val();
+
+        $.ajax({
+            url: `/api/schedules/${id}?password=${password}`, // DELETE 요청을 보낼 URL
+            type: 'DELETE',
+            success: function(result) {
+                alert("삭제 성공!");
+                location.reload(); // 페이지 새로고침
+            },
+            error: function(xhr) {
+                if (xhr.status === 403) {
+                    alert("비밀번호가 일치하지 않습니다.");
+                } else {
+                    alert("삭제 실패!");
+                }
+            }
+        });
+    });
+
+    <!-- 일정 등록 폼 제출 이벤트 처리 -->
+    $("form[action='/api/schedules']").submit(function(event) {
+        event.preventDefault(); // 기본 제출 방지
+        const form = $(this);
+
+        $.post(form.attr("action"), form.serialize())
+            .done(function() {
+                alert("일정 등록 성공!"); // 성공 알림
+                location.reload(); // 페이지 새로고침
+            })
+            .fail(function() {
+                alert("일정 등록 실패!"); // 실패 알림
+            });
+    });
+
+
 </script>
 </body>
 </html>

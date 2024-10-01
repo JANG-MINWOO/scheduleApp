@@ -2,6 +2,8 @@ package com.sparta.scheduleapp.controller;
 
 import com.sparta.scheduleapp.dto.ScheduleRequestDto;
 import com.sparta.scheduleapp.entity.Schedule;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import org.springframework.stereotype.Controller;
@@ -95,9 +97,9 @@ public class ScheduleController {
         return "scheduleDetail"; // 수정 페이지로 이동
     }
 
-    // 일정 수정 (PUT)
-    @PutMapping("/{id}")
-    public String updateSchedule(@PathVariable Long id, @RequestBody ScheduleRequestDto scheduleRequestDto) {
+    // 일정 수정 (POST)
+    @PostMapping("/edit/{id}")
+    public String updateSchedule(@PathVariable Long id, @ModelAttribute ScheduleRequestDto scheduleRequestDto) {
         String sql = "UPDATE schedules SET task = ?, updated_date = ? WHERE id = ? AND password = ?";
         LocalDateTime now = LocalDateTime.now(); // 현재 시간
 
@@ -111,15 +113,15 @@ public class ScheduleController {
 
     // 일정 삭제 (DELETE)
     @DeleteMapping("/{id}")
-    public String deleteSchedule(@PathVariable Long id, @RequestParam String password) {
+    public ResponseEntity<String> deleteSchedule(@PathVariable Long id, @RequestParam String password) {
         String sql = "DELETE FROM schedules WHERE id = ? AND password = ?";
-
-        // 비밀번호가 일치할 경우 일정 삭제
         int rowsAffected = jdbcTemplate.update(sql, id, password);
+
         if (rowsAffected == 0) {
-            return "403"; // 비밀번호 불일치
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("비밀번호 불일치");
         }
-        return "redirect:/api/schedules"; // 삭제 후 일정 목록으로 리다이렉트
+
+        return ResponseEntity.ok("일정 삭제 성공");
     }
 }
 
