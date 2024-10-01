@@ -63,7 +63,7 @@
                     <textarea id="task" name="task" class="form-control" required></textarea>
                 </div>
                 <button type="submit" class="btn btn-ghost">등록</button>
-                <a href="/schedules" class="btn btn-ghost">목록으로</a>
+                <a href="/api/schedules" class="btn btn-ghost">목록으로</a>
             </form>
         </div>
     </div>
@@ -77,10 +77,10 @@
                         <strong th:text="${schedule.task}"></strong> (작성자: <span th:text="${schedule.author}"></span>)
                     </div>
                     <div>
-                        <small>작성일: <span th:text="${schedule.createdDate}"></span> | 수정일: <span th:text="${schedule.updateDate}"></span></small>
+                        <small>작성일: <span th:text="${schedule.createdDate}"></span> | 수정일: <span th:text="${schedule.updatedDate}"></span></small>
                     </div>
-                    <button class="btn btn-ghost btn-sm" th:onclick="'location.href=\'/schedules/edit/' + ${schedule.id} + '\''">수정</button>
-                    <button class="btn btn-ghost btn-sm" th:onclick="'location.href=\'/schedules/delete/' + ${schedule.id} + '\''">삭제</button>
+                    <button class="btn btn-ghost btn-sm" th:onclick="'location.href=\'/api/schedules/edit/' + ${schedule.id} + '\''">수정</button>
+                    <button class="btn btn-ghost btn-sm" th:onclick="'location.href=\'/api/schedules/delete/' + ${schedule.id} + '\''">삭제</button>
                 </div>
                 <hr />
             </div>

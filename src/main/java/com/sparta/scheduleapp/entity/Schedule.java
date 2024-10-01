@@ -18,5 +18,5 @@ public class Schedule {
     private String author; //작성자
     private String password; //등록, 수정 및 삭제 등 비밀번호
     private LocalDateTime createdDate; //작성일
-    private LocalDateTime updateDate; //수정일
+    private LocalDateTime updatedDate; //수정일
 }

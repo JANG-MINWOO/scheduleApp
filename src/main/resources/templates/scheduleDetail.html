@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>일정 수정</title>
+</head>
+<body>
+<h1>일정 수정</h1>
+
+<form action="/api/schedules/edit" method="post">
+  <div class="mb-3">
+    <label for="author" class="form-label">작성자:</label>
+    <input type="text" id="author" name="author" class="form-control" th:value="${schedule.author}" readonly>
+  </div>
+  <div class="mb-3">
+    <label for="task" class="form-label">할일:</label>
+    <textarea id="task" name="task" class="form-control" th:value="${schedule.task}" required></textarea>
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">비밀번호:</label>
+    <input type="password" id="password" name="password" class="form-control" required>
+  </div>
+  <button type="submit" class="btn btn-ghost">수정</button>
+  <a href="/api/schedules" class="btn btn-ghost">목록으로</a>
+</form>
+</body>
+</html>
