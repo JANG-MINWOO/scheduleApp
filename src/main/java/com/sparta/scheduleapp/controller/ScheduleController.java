@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -99,15 +100,20 @@ public class ScheduleController {
 
     // 일정 수정 (POST)
     @PostMapping("/edit/{id}")
-    public String updateSchedule(@PathVariable Long id, @ModelAttribute ScheduleRequestDto scheduleRequestDto) {
+    public String updateSchedule(@PathVariable Long id, @ModelAttribute ScheduleRequestDto scheduleRequestDto, RedirectAttributes redirectAttributes) {
         String sql = "UPDATE schedules SET task = ?, updated_date = ? WHERE id = ? AND password = ?";
         LocalDateTime now = LocalDateTime.now(); // 현재 시간
 
         // 비밀번호가 일치할 경우 일정 수정
         int rowsAffected = jdbcTemplate.update(sql, scheduleRequestDto.getTask(), now, id, scheduleRequestDto.getPassword());
         if (rowsAffected == 0) {
-            return "403"; // 비밀번호 불일치
+            // 비밀번호가 불일치할 경우, 경고 메시지를 추가하고 수정 페이지로 리디렉션
+            redirectAttributes.addFlashAttribute("errorMessage", "비밀번호가 틀렸습니다. 다시 입력해 주세요."); // 오류 메시지 추가
+            redirectAttributes.addFlashAttribute("schedule", scheduleRequestDto); // 현재 입력된 스케줄 데이터도 다시 추가
+            return "redirect:/api/schedules/edit/" + id; // 수정 페이지로 이동
         }
+        // 수정 성공 후, 성공 메시지를 추가하고 일정 목록으로 리다이렉트
+        redirectAttributes.addFlashAttribute("successMessage", "일정이 성공적으로 수정되었습니다.");
         return "redirect:/api/schedules"; // 수정 후 일정 목록으로 리다이렉트
     }
 

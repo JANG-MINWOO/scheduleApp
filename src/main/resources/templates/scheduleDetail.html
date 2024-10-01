@@ -44,6 +44,14 @@
 <div class="container">
     <div class="box">
         <h1>일정 수정</h1>
+        <div th:if="${errorMessage}" class="alert alert-danger">
+            <p th:text="${errorMessage}"></p>
+        </div>
+        <div th:if="${successMessage}" class="alert alert-success">
+            <p th:text="${successMessage}"></p>
+        </div>
+
+
         <form th:action="'/api/schedules/edit/' + ${schedule.id}" method="post">
             <div class="mb-3">
                 <label for="author" class="form-label">작성자:</label>
@@ -63,6 +71,15 @@
         </form>
     </div>
 </div>
+<script>
+    /* 오류 메시지 처리 */
+    /* 주의: ${error}가 null 이 아닐 때만 alert 실행 */
+    var errorMessage = /*[[${error}]]*/ null; // errorMessage 변수를 null로 초기화
+    if (errorMessage) {
+        alert(errorMessage);
+    }
+</script>
 
 </body>
+
 </html>
