@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class Schedule {
-    private long id; //식별번호
+    private Long id; //식별번호
     private String task; //작성된 스케쥴
     private String author; //작성자
     private String password; //등록, 수정 및 삭제 등 비밀번호
