@@ -45,6 +45,7 @@ public class ScheduleService {
             return false; // 비밀번호 불일치
         }
         schedule.setTask(scheduleRequestDto.getTask());
+        schedule.setAuthor(scheduleRequestDto.getAuthor()); // 작성자 이름 업데이트
         schedule.setUpdatedDate(LocalDateTime.now());
         scheduleRepository.save(schedule); // Repository에 수정된 일정 저장
         return true; // 수정 성공
