@@ -67,6 +67,17 @@
             </form>
         </div>
     </div>
+    <!-- 검색 폼 -->
+    <div class="mb-3">
+        <form th:action="@{/api/schedules/search}" method="get">
+            <input type="text" name="author" placeholder="작성자 검색" class="form-control" />
+            <button type="submit" class="btn btn-ghost">검색</button>
+        </form>
+    </div>
+
+    <div class="mb-3">
+        <a th:href="@{/api/schedules/sort}" class="btn btn-ghost">수정일 기준 내림차순 정렬</a>
+    </div>
 
     <div class="box">
         <h4>저장된 스케줄</h4>

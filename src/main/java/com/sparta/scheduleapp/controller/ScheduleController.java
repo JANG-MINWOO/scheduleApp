@@ -129,5 +129,44 @@ public class ScheduleController {
 
         return ResponseEntity.ok("일정 삭제 성공");
     }
+
+    // 검색 기능 추가 (GET, /api/schedules/search)
+    @GetMapping("/search")
+    public String searchSchedules(@RequestParam("author") String author, Model model) {
+        String sql = "SELECT id, author, password, task, created_date, updated_date FROM schedules WHERE author LIKE ?";
+        List<Schedule> schedules = jdbcTemplate.query(sql, new Object[]{"%" + author + "%"}, (rs, rowNum) -> {
+            Schedule schedule = new Schedule();
+            schedule.setId(rs.getLong("id"));
+            schedule.setAuthor(rs.getString("author"));
+            schedule.setPassword(rs.getString("password"));
+            schedule.setTask(rs.getString("task"));
+            schedule.setCreatedDate(rs.getTimestamp("created_date").toLocalDateTime());
+            schedule.setUpdatedDate(rs.getTimestamp("updated_date").toLocalDateTime());
+            return schedule;
+        });
+
+        model.addAttribute("schedules", schedules);
+        return "scheduleManager"; // 결과를 scheduleManager.html에 표시
+    }
+
+
+    // 수정일 기준 내림차순 정렬 기능 추가 (GET, /api/schedules/sort)
+    @GetMapping("/sort")
+    public String sortSchedulesByUpdatedDate(Model model) {
+        String sql = "SELECT id, author, password, task, created_date, updated_date FROM schedules ORDER BY updated_date DESC";
+        List<Schedule> schedules = jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Schedule schedule = new Schedule();
+            schedule.setId(rs.getLong("id"));
+            schedule.setAuthor(rs.getString("author"));
+            schedule.setPassword(rs.getString("password"));
+            schedule.setTask(rs.getString("task"));
+            schedule.setCreatedDate(rs.getTimestamp("created_date").toLocalDateTime());
+            schedule.setUpdatedDate(rs.getTimestamp("updated_date").toLocalDateTime());
+            return schedule;
+        });
+
+        model.addAttribute("schedules", schedules);
+        return "scheduleManager";
+    }
 }
 
