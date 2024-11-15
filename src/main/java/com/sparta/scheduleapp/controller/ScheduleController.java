@@ -22,7 +22,7 @@ public class ScheduleController {
 
     public ScheduleController(ScheduleService scheduleService) {
         this.scheduleService = scheduleService;
-    } // ScheduleService를 생성자 주입 방식으로 초기화
+    } // ScheduleService 를 생성자 주입 방식으로 초기화
 
     // 전체 일정 조회(GET)
     @GetMapping
@@ -93,6 +93,6 @@ public class ScheduleController {
     public String sortSchedulesByUpdatedDate(Model model) {
         List<Schedule> schedules = scheduleService.sortSchedulesByUpdatedDate(); // 서비스에서 일정 정렬
         model.addAttribute("schedules", schedules); // 모델에 정렬된 일정 추가
-        return "scheduleManager"; // 결과를 scheduleManager.html에 표시
+        return "scheduleManager"; // 결과를 scheduleManager.html 에 표시
     }
 }
